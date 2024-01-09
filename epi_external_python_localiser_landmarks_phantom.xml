@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <version>2</version>
+
+    <readers>
+      <reader>
+      <dll>gadgetron_core_readers</dll>
+      <classname>AcquisitionReader</classname>
+      </reader>
+    </readers>
+
+    <writers>
+      <writer>
+      <dll>gadgetron_core_writers</dll>
+      <classname>ImageWriter</classname>
+      </writer>
+    </writers>
+
+    <stream> 
+
+    <gadget>
+      <dll>gadgetron_mricore</dll>
+      <classname>NoiseAdjustGadget</classname>
+    </gadget>
+            
+    <gadget>
+      <name>ReconX</name>
+      <!-- <dll>gadgetron_epi</dll> -->
+      <dll>gadgetron_epi</dll>
+      <classname>EPIReconXGadget</classname>
+    </gadget>
+
+    <gadget>
+      <name>EPICorr</name>
+      <!-- <dll>gadgetron_epi</dll> -->
+      <dll>gadgetron_epi</dll>      
+      <classname>EPICorrGadget</classname>
+    </gadget>
+
+    <!-- FFT in X back to k -->
+    <gadget>
+      <name>FFTX</name>
+      <dll>gadgetron_epi</dll>
+      <classname>FFTXGadget</classname>
+    </gadget>
+
+    <!-- Data accumulation and trigger gadget -->
+    <gadget>
+      <name>AccTrig</name>
+      <dll>gadgetron_mricore</dll>
+      <classname>AcquisitionAccumulateTriggerGadget</classname>
+      <property><name>trigger_dimension</name><value>repetition</value></property>
+      <property><name>sorting_dimension</name><value>slice</value></property>
+    </gadget>
+
+    <gadget>
+      <name>Buff</name>
+      <dll>gadgetron_mricore</dll>
+      <classname>BucketToBufferGadget</classname>
+      <property><name>N_dimension</name><value></value></property>
+      <property><name>S_dimension</name><value></value></property>
+      <property><name>split_slices</name><value>true</value></property>
+      <property><name>ignore_segment</name><value>true</value></property>
+    </gadget>
+         
+    <gadget>
+      <name>FFT</name>
+      <dll>gadgetron_mricore</dll>
+      <classname>FFTGadget</classname>
+    </gadget>
+    
+    <gadget>
+      <name>Combine</name>
+      <dll>gadgetron_mricore</dll>
+      <classname>CombineGadget</classname>
+    </gadget>
+
+    <gadget>
+      <name>Extract</name>
+      <dll>gadgetron_mricore</dll>
+      <classname>ExtractGadget</classname>
+    </gadget>  
+    
+    <gadget>
+      <name>AutoScale</name>
+      <dll>gadgetron_mricore</dll>
+      <classname>AutoScaleGadget</classname>
+    </gadget>
+   
+    <!-- 
+    <gadget>
+      <name>AutoScaleSNS</name>
+      <dll>gadgetron_mri_epi</dll>
+      <classname>AutoScaleGadgetSNS</classname>
+    </gadget>
+    -->
+    
+    
+    <!-- after recon processing -->
+    <gadget>
+        <name>ComplexToFloatAttrib</name>
+        <dll>gadgetron_mricore</dll>
+        <classname>ComplexToFloatGadget</classname>
+    </gadget>
+
+<!--
+    <parallelprocess workers="6">
+    	<purestream>
+    	  <gadget>
+    	    <name>Denoiser</name>
+	    <dll>gadgetron_mricore</dll>
+	    <classname>DenoiseGadget</classname>
+	    <property name="image_std" value="10"/>
+	    <property name="search_radius" value="5"/>
+	  </gadget>
+	</purestream>
+    </parallelprocess>
+-->
+    
+    <gadget>
+        <name>FloatToShortAttrib</name>
+        <dll>gadgetron_mricore</dll>
+        <classname>FloatToUShortGadget</classname>
+    </gadget>
+
+    <external>
+      <execute name="nifti_python_gadgetron_landmarks_phantom" target="IsmrmrdToNiftiGadget" type="python"/>
+      <configuration/>
+    </external> 
+    
+    <gadget>
+        <name>ImageFinish</name>
+        <dll>gadgetron_mricore</dll>
+        <classname>ImageFinishGadget</classname>
+    </gadget>
+
+
+<!-- ANOTHER ROUTE -->
+<!--
+    <external>
+      <execute name="my_first_buffered_data_python_gadget" target="SimpleBufferedDataPythonGadget" type="python"/>
+      <configuration/>
+      </external>
+-->
+    </stream>
+
+</configuration>
+
